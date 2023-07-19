@@ -1,32 +1,44 @@
-DBService.readShows().then(res => render(res));
+let manager;
 
-function render(shows){
+DBService.getAllShows().then(shows => {
+    manager = new Manager(shows);
+    render();
+});
 
-    const mainList = document.getElementById('main-list');
-    mainList.innerHTML = '';
-    for (let i = 0; i < shows.length; i++) {
+function render() {
+    const showsContainer=document.getElementById('main-container'); 
+    showsContainer.innerHTML= '';
 
-        const show = shows[i];
 
-        const cardDiv = document.createElement('div');
-        cardDiv.classList.add('show-card');
-        cardDiv.appendChild(createElementWithString('strong', shows.title))
 
-        const addressDiv = document.createElement('div');
-        addressDiv.appendChild(createElementWithString('span', shows.author));
+    for (let i = 0; i < manager.showsArray.length; i++) {
+        const show = manager.showsArray[i];
 
-        addressDiv.appendChild(createElementWithString('span', ', ' + shows.imageUrl));
-        cardDiv.appendChild(addressDiv);
+        const div = document.createElement('div');
+        div.classList.add('card');
+        
+        console.log(show.title);
 
-    
+        div.appendChild(createElementWithString('strong',show.title));
+        div.appendChild(createElementWithString('span',show.creationDate));
+        div.appendChild(createElementWithString('span',show.author));
+
+
+
+        div.appendChild(createElementWithString('img',show.imageUrl));
+
+        
+        const showImage = document.createElement('img');
+        showImage.src(show.imageUrl);
+
+        div.appendChild(showImage);
+
+
+        div.appendChild(createElementWithString('span',show.isFinished));
+        div.appendChild(createElementWithString('button',show.upVotes));
+        div.appendChild(createElementWithString('button',show.downVotes));
+
+        showsContainer.appendChild(div);
     }
-
-    function createElementWithString(elementName,contentString){
-        const element = document.createElement(elementName);
-        const node = document.createTextNode(contentString);
-        element.appendChild(node);
-        return element;
-    }
-
 
 }
